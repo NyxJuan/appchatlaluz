@@ -67,6 +67,7 @@ class __FormState extends State<_Form> {
           ButtonLogin(
             text: 'Ingresar',
             onPressed: () {
+              Navigator.pushReplacementNamed(context, 'user');
               print(emailCtrl.text);
               print(passCtrl.text);
             },
