@@ -1,5 +1,7 @@
 import 'package:applaluz_chat/models/user.dart';
+import 'package:applaluz_chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserScreen extends StatefulWidget {
@@ -10,26 +12,30 @@ class UserScreen extends StatefulWidget {
 RefreshController _refreshController = RefreshController(initialRefresh: false);
 
 final usuarios = [
-  User(id: '1', nombre: 'Juan', email: 'juan@gmail.com', online: true),
-  User(id: '2', nombre: 'Maria', email: 'maria@gmail.com', online: false),
-  User(id: '3', nombre: 'Eduardo', email: 'eduardo@gmail.com', online: true)
+  Usuario(uid: '1', nombre: 'Juan', email: 'juan@gmail.com', online: true),
+  Usuario(uid: '2', nombre: 'Maria', email: 'maria@gmail.com', online: false),
+  Usuario(uid: '3', nombre: 'Eduardo', email: 'eduardo@gmail.com', online: true)
 ];
 
 class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
         appBar: AppBar(
-            title: Text(
-              'Mi Nombre',
-              style: TextStyle(color: Colors.black54),
-            ),
+            title:
+                Text(usuario.nombre, style: TextStyle(color: Colors.black54)),
             elevation: 1,
             backgroundColor: Colors.white,
             leading: IconButton(
               icon: Icon(Icons.exit_to_app, color: Colors.black87),
               onPressed: () {
-                Navigator.pushNamed(context, 'chat');
+                //Navigator.pushNamed(context, 'chat');
+                //TODO: Desconectar el socker server
+                AuthService.deleteToken();
+                Navigator.pushReplacementNamed(context, 'login');
               },
             ),
             actions: <Widget>[
@@ -59,7 +65,7 @@ class _UserScreenState extends State<UserScreen> {
         itemCount: usuarios.length);
   }
 
-  ListTile _usuarioListTile(User usuario) {
+  ListTile _usuarioListTile(Usuario usuario) {
     return ListTile(
       title: Text(usuario.nombre),
       subtitle: Text(usuario.email),
