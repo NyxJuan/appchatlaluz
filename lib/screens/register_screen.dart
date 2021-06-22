@@ -1,5 +1,6 @@
 import 'package:applaluz_chat/helpers/show_alert.dart';
 import 'package:applaluz_chat/services/auth_service.dart';
+import 'package:applaluz_chat/services/socket_service.dart';
 import 'package:applaluz_chat/widgets/custom_input.dart';
 import 'package:applaluz_chat/widgets/labels.dart';
 import 'package:applaluz_chat/widgets/logo.dart';
@@ -50,6 +51,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -87,7 +89,7 @@ class __FormState extends State<_Form> {
                         emailCtrl.text.trim(),
                         passCtrl.text.trim());
                     if (registroOk == true) {
-                      //TODO: Conectar al socket server
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'user');
                     } else {
                       mostrarAlerta(context, 'Registro incorrecto', registroOk);
